@@ -43,7 +43,7 @@ services:
     environment:
       - "POSTGRES_USER=app"
       - "POSTGRES_PASSWORD=secret"
-      - "POSTGRES_DB=laravel"
+      - "POSTGRES_DB=yii"
     volumes:
       - ./docker/storage/docker/postgresql:/var/lib/postgresql/data
     ports:
