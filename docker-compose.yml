@@ -1,38 +1,63 @@
 version: '3.2'
-
 services:
-
-  frontend:
-    build: frontend
-    ports:
-      - 20080:80
+  nginx:
+    build:
+      context: ./
+      dockerfile: docker/nginx.docker
     volumes:
-      # Re-use local composer cache via host-volume
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      # Mount source-code for development
-      - ./:/app
-
-  backend:
-    build: backend
+      - ./:/var/www
+      - ./docker/nginx/ssl:/etc/nginx/ssl
     ports:
-      - 21080:80
+      - "8080:443"
+    links:
+      - php-fpm
+  php-fpm:
+    build:
+      context: ./
+      dockerfile: docker/php-fpm.docker
     volumes:
-      # Re-use local composer cache via host-volume
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      # Mount source-code for development
-      - ./:/app
-
-  mysql:
-    image: mysql:5.7
+      - ./:/var/www
+    links:
+      - postgres
+      - redis
     environment:
-      - MYSQL_ROOT_PASSWORD=verysecret
-      - MYSQL_DATABASE=yii2advanced
-      - MYSQL_USER=yii2advanced
-      - MYSQL_PASSWORD=secret
+      - "REDIS_PORT=6379"
+      - "REDIS_HOST=redis"
+      - "ELASTICSEARCH_HOSTS=elasticsearch:9200"
+  php-cli:
+    build:
+      context: ./
+      dockerfile: docker/php-cli.docker
+    volumes:
+      - ./:/var/www
+    links:
+      - postgres
+      - redis
+    environment:
+      - "REDIS_PORT=6379"
+      - "REDIS_HOST=redis"
+      - "ELASTICSEARCH_HOSTS=elasticsearch:9200"
+    tty: true
+  postgres:
+    image: postgres:13.1-alpine
+    environment:
+      - "POSTGRES_USER=app"
+      - "POSTGRES_PASSWORD=secret"
+      - "POSTGRES_DB=laravel"
+    volumes:
+      - ./docker/storage/docker/postgresql:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+  redis:
+    image: redis
+    ports:
+      - "63791:6379"
+  node:
+    build:
+      context: ./
+      dockerfile: docker/node.docker
+    volumes:
+      - ./:/var/www
+    tty: true
 
-  #pgsql:
-  #  image: postgres:9.5
-  #  environment:
-  #    - POSTGRES_DB=yii2advanced
-  #    - POSTGRES_USER=yii2advanced
-  #    - POSTGRES_PASSWORD=secret
+
