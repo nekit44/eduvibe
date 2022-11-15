@@ -1,4 +1,4 @@
-init: docker-down-clear docker-pull docker-build docker-up
+init: docker-down-clear docker-pull docker-build docker-up composer-update yii-migrate
 up: docker-up
 down: docker-down
 restart: down up
@@ -18,4 +18,9 @@ docker-pull:
 docker-build:
 	docker-compose build
 
+composer-update:
+	docker-compose exec php-cli composer update
+
+yii-migrate:
+	docker-compose exec php-cli php yii migrate --interactive=0
 
