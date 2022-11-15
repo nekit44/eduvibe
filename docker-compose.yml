@@ -5,7 +5,7 @@ services:
       context: ./
       dockerfile: docker/nginx.docker
     volumes:
-      - ./:/var/www/frontend/web
+      - ./:/var/www
       - ./docker/nginx/ssl:/etc/nginx/ssl
     ports:
       - "8080:443"
