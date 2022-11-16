@@ -2,6 +2,7 @@ init: docker-down-clear docker-pull docker-build docker-up composer-update yii-m
 up: docker-up
 down: docker-down
 restart: down up
+test: test-migrate test-run
 
 docker-up:
 	docker-compose up -d
@@ -23,4 +24,10 @@ composer-update:
 
 yii-migrate:
 	docker-compose exec php-cli php yii migrate --interactive=0
+
+test-migrate:
+	docker-compose exec php-cli php yii_test migrate --interactive=0
+
+test-run:
+	docker-compose exec php-cli php vendor/bin/codecept run
 

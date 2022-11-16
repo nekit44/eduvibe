@@ -48,6 +48,16 @@ services:
       - ./docker/storage/docker/postgresql:/var/lib/postgresql/data
     ports:
       - "54321:5432"
+  postgres-test:
+    image: postgres:13.1-alpine
+    environment:
+      - "POSTGRES_USER=app"
+      - "POSTGRES_PASSWORD=secret"
+      - "POSTGRES_DB=yii-test"
+    volumes:
+      - ./docker/storage/docker/postgresql-test:/var/lib/postgresql/data
+    ports:
+      - "54322:5432"
   redis:
     image: redis
     ports:
