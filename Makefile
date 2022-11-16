@@ -3,6 +3,8 @@ up: docker-up
 down: docker-down
 restart: down up
 test: test-migrate test-run
+ym: yii-migrate
+ymc: yii-migrate-crate
 
 docker-up:
 	docker-compose up -d
@@ -24,6 +26,9 @@ composer-update:
 
 yii-migrate:
 	docker-compose exec php-cli php yii migrate --interactive=0
+
+yii-migrate-create:
+	docker-compose exec php-cli php yii migrate/create ${NAME} --interactive=0
 
 test-migrate:
 	docker-compose exec php-cli php yii_test migrate --interactive=0
