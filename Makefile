@@ -1,4 +1,4 @@
-init: docker-down-clear docker-pull docker-build docker-up composer-update yii-migrate
+init: docker-down-clear docker-pull docker-build docker-up composer-update yii-migrate web-app
 up: docker-up
 down: docker-down
 restart: down up web-app
