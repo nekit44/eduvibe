@@ -1,7 +1,7 @@
 init: docker-down-clear docker-pull docker-build docker-up composer-update yii-migrate
 up: docker-up
 down: docker-down
-restart: down up
+restart: down up web-app
 test: test-migrate test-run
 ym: yii-migrate
 ymc: yii-migrate-create
@@ -24,6 +24,9 @@ docker-build:
 
 composer-update:
 	docker-compose exec php-cli composer update
+
+web-app:
+	start chrome "https://127.0.0.1:8080/"
 
 yii-migrate:
 	docker-compose exec php-cli php yii migrate --interactive=0
